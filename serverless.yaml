@@ -1,0 +1,32 @@
+service: nuxt-ssr-lambda
+
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  stage: prod
+  region: ap-southeast-1
+  lambdaHashingVersion: 20201221
+  environment: 
+    NODE_ENV: prod
+  apiGateway:
+    shouldStartNameWithService: true
+
+functions:
+  nuxt:
+    handler: handler.nuxt
+    events:
+      - http: ANY /
+      - http: ANY /{proxy+}
+
+plugins: 
+  - serverless-apigw-binary
+  - serverless-offline
+
+custom:
+  apigwBinary:
+    types:
+      - '*/*'
+  serverless-offline:
+    noPrependStageInUrl: true
